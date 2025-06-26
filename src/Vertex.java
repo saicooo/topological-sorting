@@ -1,13 +1,24 @@
+import java.util.*;
+
 public class  Vertex {
 
-    public int x, y;
-    public String name;
+    private int x, y;
+    private String name;
+    private List<Vertex> neighbors;
 
-        public Vertex ( String name, int x, int y){
-            this.name = name;
-            this.x = x;
-            this.y = y;
-        }
+
+    public Vertex ( String name, int x, int y){
+        this.name = name;
+        this.x = x;
+        this.y = y;
+        this.neighbors = new ArrayList<>();
+    }
+
+    public void addNeighbor(Vertex neighbors) {
+        neighbors.add(neighbor);
+    }
+
+
 }
 
 
