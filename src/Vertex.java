@@ -14,7 +14,7 @@ public class  Vertex {
         this.neighbors = new ArrayList<>();
     }
 
-    public void addNeighbor(Vertex neighbors) {
+    public void addNeighbor(Vertex neighbor) {
         neighbors.add(neighbor);
     }
 

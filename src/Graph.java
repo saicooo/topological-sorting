@@ -12,6 +12,11 @@ public class Graph {
         vertices.add(vertex);
     }
 
+    // добавление ребра
+    public void addEdge(Vertex _s, Vertex _e) {
+        _s.addNeighbor(_e);
+    }
+
     //получаем вершину по имени
     public Vertex getVertexByName (String name) {
         for (Vertex v : vertices) {
