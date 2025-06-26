@@ -14,11 +14,20 @@ public class  Vertex {
         this.neighbors = new ArrayList<>();
     }
 
+    public int getX() { return x; }
+    public int getY() { return y; }
+    public String getName() { return name; }
+    public List<Vertex> getNeighbors() { return neighbors; }
+
+
     public void addNeighbor(Vertex neighbor) {
         neighbors.add(neighbor);
     }
 
-
+    public void removeNeighbor(Vertex neighbor) {
+        neighbors.remove(neighbor);
+    }
+    
 }
 
 
