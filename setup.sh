@@ -3,7 +3,7 @@
 # Скрипт для сборки проекта на Linux/macOS
 
 echo "Установка зависимостей из requirements.txt..."
-declare -i EXITCODE=$?
+declare -i EXITCODE
 
 pip3 install -r requirements.txt
 EXITCODE=$?
