@@ -21,7 +21,10 @@ public class  Vertex {
     public int getX() { return x; }
     public int getY() { return y; }
     public String getName() { return name; }
-    public List<Vertex> getNeighbors() { return neighbors; }
+    
+    public List<Vertex> getNeighbors() {
+        return Collections.unmodifiableList(neighbors);
+    }
 
     // добавление вершины, куда можно попасть из текущей
     public void addNeighbor(Vertex neighbor) {
