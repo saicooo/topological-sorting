@@ -41,7 +41,7 @@ public class Graph {
 
     // список вершин
     public List<Vertex> getVertices() {
-        return vertices;
+        return Collections.unmodifiableList(vertices);
     }
 
     // проверка на существование вершины в графе
