@@ -61,5 +61,11 @@ public class  Vertex {
         return hash;
     }
     
+    @Override
+    public String toString() {
+        return String.format("Vertex(%s (%d, %d) -> %s)", name, x, y,
+            neighbors.stream().map(Vertex::getName).toList());
+    }
+
 }
 
