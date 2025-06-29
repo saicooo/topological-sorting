@@ -6,15 +6,18 @@
 
 from loguru import logger as log
 from pathlib import Path
+
 import os
 import sys
 import shutil
 import subprocess
 
+from dotenv import find_dotenv, dotenv_values
+config = dotenv_values(find_dotenv())
 
-SRC_DIR = Path("src")
-LIB_DIR = Path("lib")
-OUT_DIR = Path("out")
+SRC_DIR = Path(config.get("SRC_DIR"))
+LIB_DIR = Path(config.get("LIB_DIR"))
+OUT_DIR = Path(config.get("OUT_DIR"))
 
 
 def find_java_files(src_dir: Path) -> list[str]:
