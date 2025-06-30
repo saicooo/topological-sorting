@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class TopologicalSorter implements Iterator<Vertex> {
+public class TopologicalSorter implements ExtendedIterator<Vertex> {
 
     private final Graph graph;
     private final Map<Vertex, Integer> inDegree;
@@ -39,10 +39,11 @@ public class TopologicalSorter implements Iterator<Vertex> {
     @Override
     public Vertex next() {
         if (!hasNext()) {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("No more elements");
         }
         return iterateStep();
     }
+
 
     private Vertex iterateStep() {
         Vertex v = queue.removeFirst();
@@ -57,6 +58,23 @@ public class TopologicalSorter implements Iterator<Vertex> {
         }
         return v;
     }
+
+    @Override
+    public Vertex prev() {
+        if (result.isEmpty()) {
+            throw new NoSuchElementException("No previous element to revert");
+        }
+        Vertex v = result.remove(result.size() - 1);
+        for (Vertex neighbor : v.getNeighbors()) {
+            if (inDegree.get(neighbor) == 0) {
+                queue.remove(neighbor);
+            }
+            inDegree.put(neighbor, inDegree.get(neighbor) + 1);
+        }
+        queue.addFirst(v);
+        return v;
+    }
+
 
     public List<Vertex> getSortedSoFar() {
         return Collections.unmodifiableList(result);
