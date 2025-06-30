@@ -1,5 +1,9 @@
 import java.util.*;
 
+/**
+ * Класс, выполняющий топологическую сортировку графа с возможностью
+ * пошагового прохождения вперед и назад.
+ */
 public class TopologicalSorter implements ExtendedIterator<Vertex> {
 
     private final Graph graph;
@@ -8,6 +12,13 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
     private final List<Vertex> result;
     private final Deque<List<Vertex>> addedToQueueHistory;
 
+    /**
+     * Создает объект сортировщика для заданного графа.
+     * При создании вычисляет степени входа всех вершин
+     * и формирует очередь вершин с нулевой степенью.
+     *
+     * @param graph граф, который будет отсортирован
+     */
     public TopologicalSorter(Graph graph) {
         this.graph = graph;
         this.inDegree = new HashMap<>();
@@ -33,15 +44,33 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
 
     }
 
+    /**
+     * Возвращает неизменяемый доступ к исходному графу.
+     *
+     * @return интерфейс графа
+     */
     public IConstGraph getGraph() {
         return graph;
     }
 
+    /**
+     * Проверяет, остались ли ещё вершины, которые можно извлечь из очереди.
+     *
+     * @return true, если очередная вершина доступна
+     */
     @Override
     public boolean hasNext() {
         return !queue.isEmpty();
     }
 
+    /**
+     * Выполняет следующий шаг сортировки.
+     * Удаляет вершину из очереди, уменьшает степени входа её соседей,
+     * добавляет их в очередь, если их степень стала нулевой.
+     *
+     * @return вершина, обработанная на этом шаге
+     * @throws NoSuchElementException если больше нет элементов
+     */
     @Override
     public Vertex next() throws NoSuchElementException {
         if (!hasNext()) {
@@ -50,7 +79,12 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
         return iterateNextStep();
     }
 
-
+    /**
+     * Реализует шаг вперед в сортировке.
+     * Обновляет очередь и историю.
+     *
+     * @return вершина, извлечённая на этом шаге
+     */
     private Vertex iterateNextStep() {
         Vertex v = queue.removeFirst();
         result.add(v);
@@ -68,6 +102,14 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
         return v;
     }
 
+    /**
+     * Выполняет шаг назад.
+     * Восстанавливает вершину обратно в очередь,
+     * возвращает степень входа её соседей.
+     *
+     * @return вершина, возвращённая на шаг назад
+     * @throws NoSuchElementException если нечего откатывать
+     */
     @Override
     public Vertex prev() throws NoSuchElementException {
         if (result.isEmpty()) {
@@ -77,6 +119,12 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
         return iteratePrevStep();
     }
 
+    /**
+     * Реализует логику отката шага сортировки.
+     * Обновляет очередь и историю.
+     *
+     * @return вершина, возвращённая на шаг назад
+     */
     private Vertex iteratePrevStep() {
         Vertex v = result.remove(result.size() - 1);
         List<Vertex> addedNow = addedToQueueHistory.pop();
@@ -92,6 +140,12 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
         return v;
     }
 
+    /**
+     * Возвращает неизменяемый список вершин,
+     * которые уже были обработаны (отсортированы).
+     *
+     * @return список отсортированных вершин
+     */
     public List<Vertex> getSortedSoFar() {
         return Collections.unmodifiableList(result);
     }
