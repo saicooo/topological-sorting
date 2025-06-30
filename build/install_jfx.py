@@ -107,6 +107,7 @@ def install_javafx():
     log.debug(f"Определены ОС: {os_name}, архитектура: {arch}")
 
     download_and_extract_javafx(os_name, arch)
+    log.info("Установка JavaFX завершена.")
 
     # java --module-path {module_path} --add-modules {JFX_MODULES} -cp \"{classpath}\" YourMainClass
 
