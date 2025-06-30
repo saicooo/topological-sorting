@@ -57,6 +57,11 @@ def download_and_extract_javafx(os_name, arch):
     :param arch: Архитектура ("x64" или "aarch64").
     :raises RuntimeError: при ошибках скачивания или распаковки архива.
     """
+
+    if (LIB_DIR / f"javafx-sdk-{JFX_VERSION}" / "lib" / "javafx.base.jar").exists():
+        log.info(f"JavaFX SDK уже установлен в {LIB_DIR}. Пропуск скачивания.")
+        return
+
     url = f"https://download2.gluonhq.com/openjfx/{JFX_VERSION}/openjfx-{JFX_VERSION}_{os_name}-{arch}_bin-sdk.zip"
     log.debug(f"Скачивание JavaFX SDK с URL: {url}")
 
