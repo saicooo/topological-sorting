@@ -33,7 +33,7 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
 
     }
 
-    public Graph getGraph() { // TODO: return a copy or an unmodifiable view
+    public IConstGraph getGraph() {
         return graph;
     }
 
