@@ -2,14 +2,23 @@
 
 # Скрипт для сборки проекта на Linux/macOS
 
-echo "Установка зависимостей из requirements.txt..."
 declare -i EXITCODE
 
+echo "Установка зависимостей из requirements.txt..."
 pip3 install -r requirements.txt
 EXITCODE=$?
 
 if [ $EXITCODE -ne 0 ]; then
     echo "Ошибка при установке зависимостей..."
+    exit $EXITCODE
+fi
+
+echo "Установка JavaFX..."
+python3 -u ./build/install_jfx.py
+EXITCODE=$?
+
+if [ $EXITCODE -ne 0 ]; then
+    echo "Ошибка при установке JavaFX..."
     exit $EXITCODE
 fi
 
