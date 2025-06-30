@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Graph {
+public class Graph implements IGraph {
     private List<Vertex> vertices;
 
     public Graph() {
@@ -12,6 +12,7 @@ public class Graph {
     }
 
     // добавление вершин
+    @Override
     public void addVertex (Vertex vertex) {
         if (exists(vertex)) {
             throw new IllegalArgumentException("Вершина в графе уже существует");
@@ -21,6 +22,7 @@ public class Graph {
     }
 
     // добавление ребра
+    @Override
     public void addEdge(Vertex _s, Vertex _e) {
         if (!exists(_s) || !exists(_e)) {
             throw new IllegalArgumentException("Вершины добавляемых рёбер должны существовать в графе");
@@ -30,6 +32,7 @@ public class Graph {
     }
 
     // получаем вершину по имени
+    @Override
     public Vertex getVertexByName (String name) {
         for (Vertex v : vertices) {
             if (v.getName().equals(name)) {
@@ -40,11 +43,13 @@ public class Graph {
     }
 
     // список вершин
+    @Override
     public List<Vertex> getVertices() {
         return Collections.unmodifiableList(vertices);
     }
 
     // проверка на существование вершины в графе
+    @Override
     public boolean exists(Vertex vertex) {
         for (Vertex v : vertices) {
             if (vertex.equals(v)) {
