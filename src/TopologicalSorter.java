@@ -47,11 +47,11 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
         if (!hasNext()) {
             throw new NoSuchElementException("No more elements");
         }
-        return iterateStep();
+        return iterateNextStep();
     }
 
 
-    private Vertex iterateStep() {
+    private Vertex iterateNextStep() {
         Vertex v = queue.removeFirst();
         result.add(v);
 
@@ -74,6 +74,10 @@ public class TopologicalSorter implements ExtendedIterator<Vertex> {
             throw new NoSuchElementException("No previous element to revert");
         }
         
+        return iteratePrevStep();
+    }
+
+    private Vertex iteratePrevStep() {
         Vertex v = result.remove(result.size() - 1);
         List<Vertex> addedNow = addedToQueueHistory.pop();
         for (Vertex neighbor : v.getNeighbors()) {
