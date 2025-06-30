@@ -69,6 +69,6 @@ fi
 echo "Сборка проекта успешно завершена..."
 
 echo "Деактивация виртуального окружения..."
-source .venv/bin/deactivate
+deactivate
 rm -r .venv
 
