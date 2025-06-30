@@ -2,14 +2,14 @@
 
 from pathlib import Path
 from loguru import logger as log
-# TODO: logs
+from urllib.error import URLError
+from zipfile import ZipFile, BadZipFile
 # TODO: docs
 
 import os
 import platform
 import sys
 import urllib.request
-import zipfile
 
 from dotenv import find_dotenv, dotenv_values
 config = dotenv_values(find_dotenv())
@@ -47,25 +47,47 @@ def get_platform_info():
 def download_and_extract_javafx(os_name, arch):
     """Скачивает и распаковывает JavaFX SDK."""
     url = f"https://download2.gluonhq.com/openjfx/{JFX_VERSION}/openjfx-{JFX_VERSION}_{os_name}-{arch}_bin-sdk.zip"
+    log.debug(f"Скачивание JavaFX SDK с URL: {url}")
+
     zip_path = TMP_DIR / Path("javafx-sdk.zip")
-    sdk_dir = LIB_DIR
+    if not TMP_DIR.exists():
+        log.debug(f"Создание временной директории: {TMP_DIR}")
+        TMP_DIR.mkdir(parents=True, exist_ok=True)
+
+    log.debug(f"Временный файл для скачивания: {zip_path}")
+
+    if not LIB_DIR.exists():
+        log.debug(f"Создание директории для библиотек: {LIB_DIR}")
+        LIB_DIR.mkdir(parents=True, exist_ok=True)
 
     try:
-        # TODO: split 
         urllib.request.urlretrieve(url, zip_path)
+    except URLError as e:
+        raise RuntimeError(f"Ошибка при скачивании JavaFX SDK: {e}") from e
+    else:
+        log.debug(f"JavaFX SDK успешно скачан: {zip_path}")
 
-        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+    sdk_dir = LIB_DIR
+    log.debug(f"Директория для установки JavaFX: {sdk_dir}")
+
+    log.debug(f"Распаковка JavaFX SDK из {zip_path} в {sdk_dir}")
+    try:
+        with ZipFile(zip_path, "r") as zip_ref:
             zip_ref.extractall(sdk_dir)
+    except FileNotFoundError as e:
+        raise RuntimeError(f"Файл {zip_path} не найден при распаковке JavaFX SDK: {e}") from e
+    except BadZipFile as e:
+        raise RuntimeError(f"Ошибка при распаковке JavaFX SDK: {e}") from e
+    else:
+        log.debug(f"JavaFX SDK успешно распакован в {sdk_dir}")
         os.remove(zip_path)
-
-    except Exception as e:
-        print(f"❌ Error: {e}")
-        sys.exit(1)
-
-
+    
 
 def install_javafx():
+    log.info("Установка JavaFX...")
     os_name, arch = get_platform_info()
+    log.debug(f"Определены ОС: {os_name}, архитектура: {arch}")
+
     download_and_extract_javafx(os_name, arch)
 
     # java --module-path {module_path} --add-modules {JFX_MODULES} -cp \"{classpath}\" YourMainClass
@@ -75,8 +97,6 @@ def main():
     """
     Точка входа в скрипт. Запускает сборку и обрабатывает возможные ошибки.
     """
-
-    # TODO: norm exceptions 
     try:
         install_javafx()
     except RuntimeError as e:
