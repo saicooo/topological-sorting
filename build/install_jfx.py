@@ -4,7 +4,6 @@ from pathlib import Path
 from loguru import logger as log
 from urllib.error import URLError
 from zipfile import ZipFile, BadZipFile
-# TODO: docs
 
 import os
 import platform
@@ -21,7 +20,13 @@ TMP_DIR = Path(config.get("TMP_DIR"))
 
 
 def get_platform_info():
-    """Определяет ОС и архитектуру."""
+    """
+    Определяет операционную систему и архитектуру текущей машины.
+
+    :return: Кортеж (os_name, arch), где os_name — строка ("windows", "linux", "mac"),
+             arch — строка ("x64" или "aarch64").
+    :raises RuntimeError: если ОС или архитектура не поддерживаются JavaFX.
+    """
     system = platform.system().lower()
     arch = platform.machine().lower()
 
@@ -45,7 +50,13 @@ def get_platform_info():
 
 
 def download_and_extract_javafx(os_name, arch):
-    """Скачивает и распаковывает JavaFX SDK."""
+    """
+    Скачивает и распаковывает JavaFX SDK для заданной платформы и архитектуры.
+
+    :param os_name: Имя операционной системы ("windows", "linux", "mac").
+    :param arch: Архитектура ("x64" или "aarch64").
+    :raises RuntimeError: при ошибках скачивания или распаковки архива.
+    """
     url = f"https://download2.gluonhq.com/openjfx/{JFX_VERSION}/openjfx-{JFX_VERSION}_{os_name}-{arch}_bin-sdk.zip"
     log.debug(f"Скачивание JavaFX SDK с URL: {url}")
 
@@ -84,6 +95,13 @@ def download_and_extract_javafx(os_name, arch):
     
 
 def install_javafx():
+    """
+    Основная функция установки JavaFX:
+    - Определяет платформу и архитектуру.
+    - Скачивает и распаковывает JavaFX SDK в папку LIB_DIR.
+    - Логирует процесс установки.
+    :raises RuntimeError: при ошибках установки.
+    """
     log.info("Установка JavaFX...")
     os_name, arch = get_platform_info()
     log.debug(f"Определены ОС: {os_name}, архитектура: {arch}")
@@ -95,7 +113,7 @@ def install_javafx():
 
 def main():
     """
-    Точка входа в скрипт. Запускает сборку и обрабатывает возможные ошибки.
+    Точка входа в скрипт. Запускает установку JavaFX и обрабатывает возможные ошибки.
     """
     try:
         install_javafx()
