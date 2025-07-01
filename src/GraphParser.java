@@ -88,6 +88,12 @@ public final class GraphParser {
     }
 
     private static void validateEdgeData(EdgeJsonData eData, int index, int vertexCount) {
+        if (eData.controlStep != 0) {
+            throw new IllegalArgumentException(
+                "Поле controlStep должно быть 0 в ребре #" + index
+            );
+        }
+        
         if (!eData.isDirected) {
             throw new IllegalArgumentException(
                 "Топологическая сортировка требует ориентированный граф (ребро #" + index + ")"
