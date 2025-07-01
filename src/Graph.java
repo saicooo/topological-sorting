@@ -50,6 +50,13 @@ public class Graph implements IGraph {
             throw new IllegalArgumentException("Вершины добавляемых рёбер должны существовать в графе");
         }
         
+        // Проверка на существующее ребро
+        if (_s.getNeighbors().contains(_e)) {
+            throw new IllegalArgumentException(
+                "Ребро уже существует: " + _s.getName() + " -> " + _e.getName()
+            );
+        }
+        
         _s.addNeighbor(_e);
     }
 

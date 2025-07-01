@@ -66,8 +66,13 @@ public class  Vertex {
      * @param neighbor вершина-сосед
      */
     public void addNeighbor(Vertex neighbor) {
+        if (neighbors.contains(neighbor)) {
+            throw new IllegalArgumentException(
+                "Сосед уже существует: " + neighbor.getName() + " для вершины " + this.name
+            );
+        }
         neighbors.add(neighbor);
-    }
+    } 
 
     /**
      * Удаляет указанного соседа из списка смежных вершин.
