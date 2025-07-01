@@ -108,33 +108,20 @@ public final class GraphParser {
 
     // Внутренние классы для структуры JSON
     private static class GraphJsonData {
-        int x0;
-        int y0;
         List<VertexJsonData> vertices;
         List<EdgeJsonData> edges;
-        List<Object> texts;
     }
 
     private static class VertexJsonData {
         int x;
         int y;
         String name;
-        int radius;
-        String background;
-        int fontSize;
-        String color;
-        String border;
     }
 
     private static class EdgeJsonData {
         int vertex1;
         int vertex2;
-        String weight;
         boolean isDirected;
         int controlStep;
-        int fontSize;
-        int lineWidth;
-        String background;
-        String color;
     }
 }
