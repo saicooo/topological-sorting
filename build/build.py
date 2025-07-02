@@ -6,10 +6,9 @@
 
 from loguru import logger as log
 from pathlib import Path
+from utils import find_java_files, clean_out_dir, get_classpath
 
-import os
 import sys
-import shutil
 import subprocess
 
 from dotenv import find_dotenv, dotenv_values
@@ -18,49 +17,6 @@ config = dotenv_values(find_dotenv())
 SRC_DIR = Path(config.get("SRC_DIR"))
 LIB_DIR = Path(config.get("LIB_DIR"))
 OUT_DIR = Path(config.get("OUT_DIR"))
-
-
-def find_java_files(src_dir: Path) -> list[str]:
-    """
-    Рекурсивно ищет все Java-файлы (*.java) в указанной директории и её поддиректориях.
-
-    :param src_dir: Путь к директории с исходными Java-файлами.
-    :return: Список строковых путей к найденным Java-файлам.
-    """
-    return [str(p) for p in src_dir.rglob("*.java")]
-
-
-def find_jars(lib_dir: Path) -> list[str]:
-    """
-    Рекурсивно ищет все jar-файлы (*.jar) в указанной директории и её поддиректориях.
-
-    :param lib_dir: Путь к директории с библиотеками.
-    :return: Список строковых путей к найденным jar-файлам.
-    """
-    return [str(jar) for jar in lib_dir.rglob("*.jar")]
-
-
-def clean_out_dir(out_dir: Path) -> None:
-    """
-    Очищает директорию out_dir, при этом сохраняет файл README.md, если он был.
-    После очистки README.md возвращается на место.
-
-    :param out_dir: Путь к директории для очистки.
-    """
-    readme_path = out_dir / "README.md"
-    readme_content = None
-
-    if readme_path.exists():
-        with open(readme_path, "rb") as f:
-            readme_content = f.read()
-
-    if out_dir.exists():
-        shutil.rmtree(out_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    
-    if readme_content is not None:
-        with open(readme_path, "wb") as f:
-            f.write(readme_content)
 
 
 def build():
@@ -91,25 +47,16 @@ def build():
     if not LIB_DIR.exists():
         log.warning(f"Директория {LIB_DIR} не найдена. Будут скомпилированы только Java файлы без зависимостей.")
     
-    jars = find_jars(LIB_DIR)
     clean_out_dir(OUT_DIR)
 
-    cp_sep = os.pathsep
-    classpath = str(OUT_DIR)
+    classpath = get_classpath(OUT_DIR, LIB_DIR)
 
-    if jars:
-        classpath += f"{cp_sep}{cp_sep.join(jars)}"
-    else:
-        log.debug(f"В директория {LIB_DIR} не найдено jar-архивов. Будут скомпилированы только Java файлы без зависимостей.")
+    if classpath == str(OUT_DIR):
+        log.debug(f"В директории {LIB_DIR} не найдено jar-архивов. Будут скомпилированы только Java файлы без зависимостей.")
 
     javac_cmd = [
-        "javac", "-d", str(OUT_DIR),
-    ]
-
-    if classpath:
-        javac_cmd += ["-classpath", classpath]
-
-    javac_cmd += java_files
+        "javac", "-d", str(OUT_DIR), "-classpath", classpath
+    ] + java_files
 
     log.info("Начало компиляции...")
     log.debug(" ".join(javac_cmd))

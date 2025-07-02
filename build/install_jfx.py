@@ -4,9 +4,9 @@ from pathlib import Path
 from loguru import logger as log
 from urllib.error import URLError
 from zipfile import ZipFile, BadZipFile
+from utils import get_platform_info
 
 import os
-import platform
 import sys
 import urllib.request
 
@@ -19,42 +19,13 @@ LIB_DIR = Path(config.get("LIB_DIR"))
 TMP_DIR = Path(config.get("TMP_DIR"))
 
 
-def get_platform_info():
-    """
-    Определяет операционную систему и архитектуру текущей машины.
-
-    :return: Кортеж (os_name, arch), где os_name — строка ("windows", "linux", "mac"),
-             arch — строка ("x64" или "aarch64").
-    :raises RuntimeError: если ОС или архитектура не поддерживаются JavaFX.
-    """
-    system = platform.system().lower()
-    arch = platform.machine().lower()
-
-    if system == "windows":
-        os_name = "windows"
-    elif system == "linux":
-        os_name = "linux"
-    elif system == "darwin":
-        os_name = "mac"
-    else:
-        raise RuntimeError(f"Unsupported OS: {system}")
-
-    if arch in ("x86_64", "amd64"):
-        arch = "x64"
-    elif arch in ("aarch64", "arm64"):
-        arch = "aarch64"
-    else:
-        raise RuntimeError(f"Unsupported architecture: {arch}")
-
-    return os_name, arch
-
-
-def download_and_extract_javafx(os_name, arch):
+def download_javafx(os_name: str, arch: str) -> Path:
     """
     Скачивает и распаковывает JavaFX SDK для заданной платформы и архитектуры.
 
     :param os_name: Имя операционной системы ("windows", "linux", "mac").
     :param arch: Архитектура ("x64" или "aarch64").
+    :return: Путь к скачанному zip-файлу с JavaFX SDK.
     :raises RuntimeError: при ошибках скачивания или распаковки архива.
     """
 
@@ -65,7 +36,7 @@ def download_and_extract_javafx(os_name, arch):
     url = f"https://download2.gluonhq.com/openjfx/{JFX_VERSION}/openjfx-{JFX_VERSION}_{os_name}-{arch}_bin-sdk.zip"
     log.debug(f"Скачивание JavaFX SDK с URL: {url}")
 
-    zip_path = TMP_DIR / Path("javafx-sdk.zip")
+    zip_path = TMP_DIR / Path(f"javafx-sdk-{JFX_VERSION}-{os_name}-{arch}.zip")
     if not TMP_DIR.exists():
         log.debug(f"Создание временной директории: {TMP_DIR}")
         TMP_DIR.mkdir(parents=True, exist_ok=True)
@@ -82,7 +53,16 @@ def download_and_extract_javafx(os_name, arch):
         raise RuntimeError(f"Ошибка при скачивании JavaFX SDK: {e}") from e
     else:
         log.debug(f"JavaFX SDK успешно скачан: {zip_path}")
+    
+    return zip_path
 
+
+def extract_javafx(zip_path: Path) -> None:
+    """
+    Извлекает JavaFX SDK из zip-архива в директорию LIB_DIR.
+    :param zip_path: Путь к zip-файлу с JavaFX SDK.
+    :raises RuntimeError: при ошибках распаковки архива.
+    """
     sdk_dir = LIB_DIR
     log.debug(f"Директория для установки JavaFX: {sdk_dir}")
 
@@ -111,10 +91,11 @@ def install_javafx():
     os_name, arch = get_platform_info()
     log.debug(f"Определены ОС: {os_name}, архитектура: {arch}")
 
-    download_and_extract_javafx(os_name, arch)
+    zip_path = download_javafx(os_name, arch)
+    extract_javafx(zip_path)
     log.info("Установка JavaFX завершена.")
 
-    # java --module-path {module_path} --add-modules {JFX_MODULES} -cp \"{classpath}\" YourMainClass
+    # java --module-path {module_path} --add-modules {JFX_MODULES} -cp {classpath} YourMainClass
 
 
 def main():
