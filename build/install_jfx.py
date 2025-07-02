@@ -28,11 +28,6 @@ def download_javafx(os_name: str, arch: str) -> Path:
     :return: Путь к скачанному zip-файлу с JavaFX SDK.
     :raises RuntimeError: при ошибках скачивания или распаковки архива.
     """
-
-    if (LIB_DIR / f"javafx-sdk-{JFX_VERSION}" / "lib" / "javafx.base.jar").exists():
-        log.info(f"JavaFX SDK уже установлен в {LIB_DIR}. Пропуск скачивания.")
-        return
-
     url = f"https://download2.gluonhq.com/openjfx/{JFX_VERSION}/openjfx-{JFX_VERSION}_{os_name}-{arch}_bin-sdk.zip"
     log.debug(f"Скачивание JavaFX SDK с URL: {url}")
 
@@ -88,6 +83,11 @@ def install_javafx():
     :raises RuntimeError: при ошибках установки.
     """
     log.info("Установка JavaFX...")
+
+    if (LIB_DIR / f"javafx-sdk-{JFX_VERSION}" / "lib" / "javafx.base.jar").exists():
+        log.info(f"JavaFX SDK уже установлен в {LIB_DIR}. Пропуск установки.")
+        return
+    
     os_name, arch = get_platform_info()
     log.debug(f"Определены ОС: {os_name}, архитектура: {arch}")
 
