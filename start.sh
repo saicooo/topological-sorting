@@ -1,8 +1,12 @@
 #!/bin/bash
 
-# Скрипт для сборки проекта на Linux/macOS
-
+# Скрипт для запуска проекта на Linux/macOS
 declare -i EXITCODE
+
+if [ $# -lt 1 ]; then
+    echo "Использование: $0 <MainClass>"
+    exit 1
+fi
 
 echo "Проверка наличия Python 3..."
 if ! command -v python3 &> /dev/null; then
@@ -16,24 +20,15 @@ if ! command -v pip3 &> /dev/null; then
     exit 1
 fi
 
-echo "Проверка наличия venv..."
-if ! python3 -m venv --help &> /dev/null; then
-    echo "Модуль venv не установлен. Установка..."
-    pip3 install --break-system-packages virtualenv
-    EXITCODE=$?
-
-    if [ $EXITCODE -ne 0 ]; then
-        echo "Ошибка при установке venv. Пожалуйста, установите модуль venv вручную."
-        exit $EXITCODE
-    fi
-
+echo "Проверка наличия виртуального окружения..."
+if [ ! -d ".venv" ]; then
+    echo "Виртуальное окружение не найдено. Пожалуйста, выполните ./setup.sh для его создания."
+    exit 1
 fi
 
-echo "Создание виртуального окружения..."
-python3 -m venv .venv
+echo "Активация виртуального окружения..."
 source .venv/bin/activate
 EXITCODE=$?
-
 if [ $EXITCODE -ne 0 ]; then
     echo "Ошибка при активации виртуального окружения."
     read -p "Нажмите Enter для продолжения..."
@@ -48,25 +43,15 @@ if [ $EXITCODE -ne 0 ]; then
     exit $EXITCODE
 fi
 
-echo "Установка JavaFX..."
-python3 -u ./build/install_jfx.py
+declare MAIN_CLASS="$1"
+
+python3 -u ./build/start.py "$MAIN_CLASS"
 EXITCODE=$?
 
 if [ $EXITCODE -ne 0 ]; then
-    echo "Ошибка при установке JavaFX..."
+    echo "Ошибка при запуске проекта..."
     exit $EXITCODE
 fi
-
-echo "Запуск build.py для сборки проекта..."
-python3 -u ./build/build.py
-EXITCODE=$?
-
-if [ $EXITCODE -ne 0 ]; then
-    echo "Ошибка при сборке проекта..."
-    exit $EXITCODE
-fi
-
-echo "Сборка проекта успешно завершена..."
 
 echo "Деактивация виртуального окружения..."
 deactivate

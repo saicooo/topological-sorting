@@ -17,6 +17,8 @@ config = dotenv_values(find_dotenv())
 SRC_DIR = Path(config.get("SRC_DIR"))
 LIB_DIR = Path(config.get("LIB_DIR"))
 OUT_DIR = Path(config.get("OUT_DIR"))
+JFX_VERSION = config.get("JFX_VERSION", "21.0.2")
+JFX_MODULES = config.get("JFX_MODULES", "javafx.controls,javafx.fxml")
 
 
 def build():
@@ -55,16 +57,23 @@ def build():
         log.debug(f"В директории {LIB_DIR} не найдено jar-архивов. Будут скомпилированы только Java файлы без зависимостей.")
 
     javac_cmd = [
-        "javac", "-d", str(OUT_DIR), "-classpath", classpath
+        "javac", 
+        "--module-path", str(LIB_DIR / f"javafx-sdk-{JFX_VERSION}" / "lib"),
+        "--add-modules", JFX_MODULES,
+        "-d", str(OUT_DIR), 
+        "-classpath", classpath
     ] + java_files
-
+    
     log.info("Начало компиляции...")
     log.debug(" ".join(javac_cmd))
 
-    result = subprocess.run(javac_cmd)
+    result = subprocess.run(javac_cmd, shell=True, text=True, capture_output=True)
 
     if result.returncode != 0:
-        raise RuntimeError("Ошибка компиляции Java файлов.")
+        raise RuntimeError(f"Ошибка компиляции Java файлов: {result.stderr}")
+    
+    log.success("Сборка завершена успешно.")
+    log.debug(f"Скомпилированные файлы находятся в директории: {OUT_DIR}")
 
 
 def main():
@@ -82,9 +91,6 @@ def main():
     except KeyboardInterrupt:
         log.warning(f"Скрипт прерван пользователем.")
         sys.exit(1)
-    else:
-        log.success("Сборка завершена успешно.")
-        log.debug(f"Скомпилированные файлы находятся в директории: {OUT_DIR}")
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 @echo off
-chcp 65001
+chcp 65001 >nul
 
 @REM Скрипт для сборки проекта на Windows
 
@@ -82,7 +82,6 @@ echo Сборка проекта успешно завершена...
 
 echo Деактивация виртуального окружения...
 call .\.venv\Scripts\deactivate.bat
-rmdir /s /q .venv
 
 pause
 exit 0
