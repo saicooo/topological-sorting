@@ -50,11 +50,11 @@
          </font>
       </Button>
       
-      <Button fx:id="EnterManually" layoutX="14.0" layoutY="740.0" mnemonicParsing="false" 
+      <!-- <Button fx:id="EnterManually" layoutX="14.0" layoutY="740.0" mnemonicParsing="false" 
               onAction="#onInputManualClick" prefHeight="50.0" prefWidth="150.0" text="Ввести вручную">
          <font>
             <Font name="Calibri Bold" size="14.0" />
          </font>
-      </Button>
+      </Button> -->
    </children>
 </AnchorPane>
