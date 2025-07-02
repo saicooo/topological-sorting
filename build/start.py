@@ -30,20 +30,22 @@ def start(main_class: str | None = None):
     """
     if main_class is None:
         main_class = "Main"
-    
+
+    log.debug(f"Копирование ресурсного fxml...")
+    fxml_source = Path("resources") / "MainApplication.fxml"
+    fxml_target = OUT_DIR / "MainApplication.fxml"
+    if fxml_source.exists():
+        fxml_target.parent.mkdir(parents=True, exist_ok=True)
+        fxml_target.write_bytes(fxml_source.read_bytes())
+        log.debug(f"Скопирован {fxml_source} в {fxml_target}")
+
     log.info(f"Запуск приложения с главным классом: {main_class}")
     
     classpath = get_classpath(OUT_DIR, LIB_DIR)
-    command = [
-        "java", 
-        "--module-path", LIB_DIR / f'javafx-sdk-{JFX_VERSION}' / 'lib', 
-        "--add-modules", "javafx.controls,javafx.fxml", 
-        "-cp", classpath,
-         main_class
-    ]
-
+    command = f"java --module-path {LIB_DIR / f'javafx-sdk-{JFX_VERSION}' / 'lib'} --add-modules javafx.controls,javafx.fxml -cp {classpath} {main_class}"
+    
     log.debug(f"Команда для запуска: {command}")
-    result = subprocess.run(command, text=True, capture_output=True)
+    result = subprocess.run(command, shell=True, text=True, capture_output=True)
     
     if result.returncode != 0:
         raise RuntimeError(f"Ошибка при запуске приложения: {result.stdout}\n{result.stderr}")
