@@ -82,7 +82,6 @@ echo Сборка проекта успешно завершена...
 
 echo Деактивация виртуального окружения...
 call .\.venv\Scripts\deactivate.bat
-rmdir /s /q .venv
 
 pause
 exit 0
