@@ -56,7 +56,7 @@ TODO
 ### Распределение ролей
 | Задача                   | Исполнители                  |
 |--------------------------|------------------------------|
-| frontend                 | magicjabka & ~~saicooo~~     |
+| frontend                 | magicjabka & saicooo     |
 | backend                  | stepanviolet & bermaxim      |
 | build scripts            | stepanviolet                 |
 | Управление репозиторием  | stepanviolet                 |
