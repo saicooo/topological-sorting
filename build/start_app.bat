@@ -5,7 +5,8 @@ REM Скрипт для запуска проекта на Windows
 
 if "%~1"=="" (
     echo Использование: %~nx0 MainClass
-    exit /b 1
+    pause
+    exit 1
 )
 
 echo Проверка наличия Python...
@@ -31,7 +32,8 @@ if %EXITCODE% neq 0 (
 echo Проверка наличия виртуального окружения...
 if not exist ".venv" (
     echo Виртуальное окружение не найдено. Пожалуйста, выполните ./setup.bat для его создания.
-    exit /b 1
+    pause
+    exit 1
 )
 
 echo Активация виртуального окружения...
@@ -60,9 +62,11 @@ set /a EXITCODE=%ERRORLEVEL%
 
 if %EXITCODE% neq 0 (
     echo Ошибка при запуске проекта...
-    exit /b %EXITCODE%
+    exit %EXITCODE%
 )
 
 echo Деактивация виртуального окружения...
 call .\.venv\Scripts\deactivate.bat
 
+pause
+exit 0

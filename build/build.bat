@@ -39,13 +39,22 @@ if %EXITCODE% neq 0 (
     )
 )
 
-echo Создание виртуального окружения...
-python -m venv .venv
-call .venv\Scripts\activate.bat
+echo Проверка наличия виртуального окружения...
+if not exist ".venv" (
+    echo Создание виртуального окружения...
+    python -m venv .venv
 
-if %ERRORLEVEL% neq 0 (
-    echo Ошибка при активации виртуального окружения.
-    pause
+    if %ERRORLEVEL% neq 0 (
+        echo Ошибка при создании виртуального окружения.
+        pause
+    ) else (
+        echo Виртуальное окружение успешно создано.
+        call .venv\Scripts\activate.bat
+    )
+
+) else (
+    echo Виртуальное окружение уже существует. Активация...
+    call .venv\Scripts\activate.bat
 )
 
 echo Установка зависимостей из requirements.txt...

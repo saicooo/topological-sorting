@@ -29,15 +29,24 @@ if ! python3 -m venv --help &> /dev/null; then
 
 fi
 
-echo "Создание виртуального окружения..."
-python3 -m venv .venv
-source .venv/bin/activate
-EXITCODE=$?
+echo "Проверка наличия виртуального окружения..."
+if [ ! -d ".venv" ]; then
+    echo "Создание виртуального окружения..."
+    python3 -m venv .venv
+    EXITCODE=$?
 
-if [ $EXITCODE -ne 0 ]; then
-    echo "Ошибка при активации виртуального окружения."
-    read -p "Нажмите Enter для продолжения..."
+    if [ $EXITCODE -ne 0 ]; then
+        echo "Ошибка при создании виртуального окружения."
+        read -p "Нажмите Enter для продолжения..."
+    else
+        source .venv/bin/activate
+    fi
+
+else
+    echo "Виртуальное окружение уже существует. Использование существующего окружения..."
+    source .venv/bin/activate
 fi
+
 
 echo "Установка зависимостей из requirements.txt..."
 pip3 install -r requirements.txt
