@@ -39,7 +39,12 @@ public class Controller {
     void onLoadFromFileClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open Graph JSON");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JSON Files", "*.json"));
+        fileChooser.getExtensionFilters().addAll(
+            new FileChooser.ExtensionFilter("Graph Files (*.json, *.graph)", "*.json", "*.graph"),
+            new FileChooser.ExtensionFilter("JSON Files", "*.json"),
+            new FileChooser.ExtensionFilter("Graph Files", "*.graph"),
+            new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
         File file = fileChooser.showOpenDialog(null);
 
         if (file != null) {
