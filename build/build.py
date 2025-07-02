@@ -67,10 +67,10 @@ def build():
     log.info("Начало компиляции...")
     log.debug(" ".join(javac_cmd))
 
-    result = subprocess.run(javac_cmd, shell=True, text=True, capture_output=True)
+    result = subprocess.run(javac_cmd, text=True, capture_output=True)
 
     if result.returncode != 0:
-        raise RuntimeError(f"Ошибка компиляции Java файлов: {result.stderr}")
+        raise RuntimeError(f"Ошибка компиляции Java файлов: {result.stdout}\n{result.stderr}")
     
     log.success("Сборка завершена успешно.")
     log.debug(f"Скомпилированные файлы находятся в директории: {OUT_DIR}")
