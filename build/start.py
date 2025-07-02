@@ -17,7 +17,7 @@ config = dotenv_values(find_dotenv())
 
 OUT_DIR = Path(config.get("OUT_DIR"))
 LIB_DIR = Path(config.get("LIB_DIR"))
-JFX_VERSION = config.get("JFX_VERSION", "21.0.2")
+JFX_VERSION = config.get("JFX_VERSION", "21.0.7")
 JFX_MODULES = config.get("JFX_MODULES", "javafx.controls,javafx.fxml")
 
 
