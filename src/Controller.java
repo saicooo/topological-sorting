@@ -1,10 +1,14 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
@@ -17,12 +21,12 @@ import java.util.Map;
 
 public class Controller {
 
-    @FXML private ScrollPane scrollPane;
     @FXML private Pane graphCanvas;
+    @FXML private VBox mainContainer;
+    @FXML private HBox pathContainer;
     
-    // Кнопки (без изменений)
+    // Кнопки
     @FXML private Button BackButton;
-    @FXML private Button EnterManually;
     @FXML private Button ForwardButton;
     @FXML private Button OnLoadFromFile;
     @FXML private Button RunImmediately;
@@ -30,10 +34,20 @@ public class Controller {
     private Graph graph;
     private TopologicalSorter sorter;
     private final Map<Vertex, Circle> vertexNodes = new HashMap<>();
-    private double scaleX = 1.0;
-    private double scaleY = 1.0;
+    private double scale = 1.0;
     private double offsetX = 0;
     private double offsetY = 0;
+    private Label pathLabel;
+
+    @FXML
+    public void initialize() {
+        // Инициализация контейнера для пути
+        pathLabel = new Label();
+        pathLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        pathLabel.setPadding(new Insets(10));
+        pathContainer.getChildren().add(pathLabel);
+        HBox.setHgrow(pathLabel, Priority.ALWAYS);
+    }
 
     @FXML
     void onLoadFromFileClick(ActionEvent event) {
@@ -54,8 +68,9 @@ public class Controller {
                 sorter = new TopologicalSorter(graph);
                 calculateScaling();
                 drawGraph();
+                updatePathLabel();
             } catch (Exception e) {
-                showAlert(AlertType.ERROR, "Error", "Load failed", e.getMessage()); // Исправлен вызов
+                showAlert(AlertType.ERROR, "Error", "Load failed", e.getMessage());
             }
         }
     }
@@ -77,33 +92,35 @@ public class Controller {
         
         double graphWidth = maxX - minX;
         double graphHeight = maxY - minY;
-        double canvasWidth = 1200;
-        double canvasHeight = 800;
         
-        scaleX = (graphWidth > 0) ? (canvasWidth - 100) / graphWidth : 1;
-        scaleY = (graphHeight > 0) ? (canvasHeight - 100) / graphHeight : 1;
-        double scale = Math.min(scaleX, scaleY);
-        scaleX = scale;
-        scaleY = scale;
+        // Используем реальные размеры области для рисования
+        double canvasWidth = graphCanvas.getWidth();
+        double canvasHeight = graphCanvas.getHeight();
         
-        offsetX = 50 - minX * scaleX;
-        offsetY = 50 - minY * scaleY;
+        // Рассчитываем масштаб для вписывания в область просмотра
+        double scaleX = (canvasWidth > 0 && graphWidth > 0) 
+                ? (canvasWidth - 100) / graphWidth : 1;
+        double scaleY = (canvasHeight > 0 && graphHeight > 0) 
+                ? (canvasHeight - 100) / graphHeight : 1;
+        
+        scale = Math.min(scaleX, scaleY) * 0.95; // Добавляем небольшой отступ
+        
+        // Центрирование графа
+        offsetX = (canvasWidth - graphWidth * scale) / 2 - minX * scale;
+        offsetY = (canvasHeight - graphHeight * scale) / 2 - minY * scale;
     }
 
     private double transformX(double x) {
-        return offsetX + x * scaleX;
+        return offsetX + x * scale;
     }
 
     private double transformY(double y) {
-        return offsetY + y * scaleY;
+        return offsetY + y * scale;
     }
 
     private void drawGraph() {
         graphCanvas.getChildren().clear();
         vertexNodes.clear();
-        
-        double maxX = 0;
-        double maxY = 0;
         
         // Рисуем рёбра со стрелками
         for (Vertex vertex : graph.getVertices()) {
@@ -119,13 +136,13 @@ public class Controller {
                 double dy = y2 - y1;
                 double length = Math.sqrt(dx * dx + dy * dy);
                 
-                if (length < 1e-6) continue; // избегаем деления на ноль
+                if (length < 1e-6) continue;
                 
                 // Нормализуем вектор
                 dx /= length;
                 dy /= length;
                 
-                // Отступаем от конечной точки на радиус вершины
+                // Отступаем от конечной точки
                 double endX = x2 - 20 * dx;
                 double endY = y2 - 20 * dy;
                 
@@ -136,13 +153,10 @@ public class Controller {
                 
                 // Отрисовываем стрелку
                 drawArrow(endX, endY, dx, dy);
-                
-                maxX = Math.max(maxX, Math.max(x1, x2));
-                maxY = Math.max(maxY, Math.max(y1, y2));
             }
         }
         
-        // Рисуем вершины (без изменений)
+        // Рисуем вершины
         for (Vertex vertex : graph.getVertices()) {
             double x = transformX(vertex.getX());
             double y = transformY(vertex.getY());
@@ -155,35 +169,23 @@ public class Controller {
 
             graphCanvas.getChildren().addAll(node, label);
             vertexNodes.put(vertex, node);
-            
-            maxX = Math.max(maxX, x);
-            maxY = Math.max(maxY, y);
         }
-        
-        graphCanvas.setMinSize(maxX + 50, maxY + 50);
-        graphCanvas.setPrefSize(maxX + 50, maxY + 50);
     }
 
     // Метод для рисования стрелки
     private void drawArrow(double endX, double endY, double dx, double dy) {
-        double arrowLength = 12; // длина "крыльев" стрелки
-        double arrowAngle = Math.toRadians(30); // угол наклона крыльев
+        double arrowLength = 12;
+        double arrowAngle = Math.toRadians(30);
         
-        // Вычисляем точки для стрелки
         double x1 = endX - arrowLength * (dx * Math.cos(arrowAngle) + dy * Math.sin(arrowAngle));
         double y1 = endY - arrowLength * (dy * Math.cos(arrowAngle) - dx * Math.sin(arrowAngle));
         
         double x2 = endX - arrowLength * (dx * Math.cos(-arrowAngle) + dy * Math.sin(-arrowAngle));
         double y2 = endY - arrowLength * (dy * Math.cos(-arrowAngle) - dx * Math.sin(-arrowAngle));
         
-        // Создаем треугольник-стрелку
         Polygon arrowHead = new Polygon();
-        arrowHead.getPoints().addAll(
-            endX, endY, // острие стрелки
-            x1, y1,     // первое крыло
-            x2, y2      // второе крыло
-        );
-        arrowHead.setStyle("-fx-fill: black;"); // цвет стрелки
+        arrowHead.getPoints().addAll(endX, endY, x1, y1, x2, y2);
+        arrowHead.setStyle("-fx-fill: black;");
         
         graphCanvas.getChildren().add(arrowHead);
     }
@@ -198,6 +200,7 @@ public class Controller {
         if (sorter.hasNext()) {
             Vertex current = sorter.next();
             highlightVertex(current, "green");
+            updatePathLabel();
         } else {
             showAlert(AlertType.INFORMATION, "Complete", "Sorting finished", "All vertices processed");
         }
@@ -213,6 +216,7 @@ public class Controller {
         if (!sorter.getSortedSoFar().isEmpty()) {
             Vertex current = sorter.prev();
             highlightVertex(current, "lightgray");
+            updatePathLabel();
         }
     }
 
@@ -227,11 +231,7 @@ public class Controller {
             Vertex current = sorter.next();
             highlightVertex(current, "green");
         }
-    }
-
-    @FXML
-    void onInputManualClick(ActionEvent event) {
-        showAlert(AlertType.INFORMATION, "Manual Input", "Coming Soon", "This feature will be implemented later");
+        updatePathLabel();
     }
 
     private void highlightVertex(Vertex vertex, String color) {
@@ -241,7 +241,21 @@ public class Controller {
         }
     }
 
-    // Исправленная сигнатура метода showAlert
+    // Обновление отображения пути
+    private void updatePathLabel() {
+        if (sorter == null || sorter.getSortedSoFar().isEmpty()) {
+            pathLabel.setText("Topological Path: ");
+            return;
+        }
+        
+        StringBuilder path = new StringBuilder("Topological Path: ");
+        for (Vertex v : sorter.getSortedSoFar()) {
+            path.append(v.getName()).append(" → ");
+        }
+        path.setLength(path.length() - 3); // Удаляем последнюю стрелку
+        pathLabel.setText(path.toString());
+    }
+
     private void showAlert(AlertType type, String title, String header, String content) {
         Alert alert = new Alert(type);
         alert.setTitle(title);
