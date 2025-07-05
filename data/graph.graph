@@ -1,10 +1,10 @@
 {
-    "x0": 0,
-    "y0": 0,
+    "x0": 491.23333333333335,
+    "y0": 224.10000000000002,
     "vertices": [
         {
-            "x": 610,
-            "y": 380,
+            "x": 270,
+            "y": -50,
             "name": "1",
             "radius": 20,
             "background": "#ffffff",
@@ -13,8 +13,8 @@
             "border": "#000000"
         },
         {
-            "x": 620,
-            "y": 210,
+            "x": 180,
+            "y": 120,
             "name": "2",
             "radius": 20,
             "background": "#ffffff",
@@ -23,8 +23,8 @@
             "border": "#000000"
         },
         {
-            "x": 830,
-            "y": 220,
+            "x": 370,
+            "y": 100,
             "name": "3",
             "radius": 20,
             "background": "#ffffff",
@@ -33,8 +33,8 @@
             "border": "#000000"
         },
         {
-            "x": 810,
-            "y": 380,
+            "x": 350,
+            "y": 240,
             "name": "4",
             "radius": 20,
             "background": "#ffffff",
@@ -46,31 +46,9 @@
     "edges": [
         {
             "vertex1": 0,
-            "vertex2": 3,
-            "weight": "",
-            "isDirected": false,
-            "controlStep": 0,
-            "fontSize": 18,
-            "lineWidth": 2,
-            "background": "#000000",
-            "color": "#000000"
-        },
-        {
-            "vertex1": 0,
-            "vertex2": 1,
-            "weight": "",
-            "isDirected": false,
-            "controlStep": 0,
-            "fontSize": 18,
-            "lineWidth": 2,
-            "background": "#000000",
-            "color": "#000000"
-        },
-        {
-            "vertex1": 1,
             "vertex2": 2,
             "weight": "",
-            "isDirected": false,
+            "isDirected": true,
             "controlStep": 0,
             "fontSize": 18,
             "lineWidth": 2,
@@ -81,19 +59,19 @@
             "vertex1": 3,
             "vertex2": 2,
             "weight": "",
-            "isDirected": false,
-            "controlStep": 0,
+            "isDirected": true,
+            "controlStep": -2.82842712474619,
             "fontSize": 18,
             "lineWidth": 2,
             "background": "#000000",
             "color": "#000000"
         },
         {
-            "vertex1": 1,
-            "vertex2": 3,
+            "vertex1": 2,
+            "vertex2": 1,
             "weight": "",
-            "isDirected": false,
-            "controlStep": 0,
+            "isDirected": true,
+            "controlStep": 19.89010905842812,
             "fontSize": 18,
             "lineWidth": 2,
             "background": "#000000",
@@ -101,9 +79,20 @@
         },
         {
             "vertex1": 0,
-            "vertex2": 2,
+            "vertex2": 1,
             "weight": "",
-            "isDirected": false,
+            "isDirected": true,
+            "controlStep": 0,
+            "fontSize": 18,
+            "lineWidth": 2,
+            "background": "#000000",
+            "color": "#000000"
+        },
+        {
+            "vertex1": 3,
+            "vertex2": 1,
+            "weight": "",
+            "isDirected": true,
             "controlStep": 0,
             "fontSize": 18,
             "lineWidth": 2,
