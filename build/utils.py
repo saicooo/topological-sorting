@@ -83,7 +83,7 @@ def get_platform_info() -> tuple[str, str]:
         case "linux":
             os_name = "linux"
         case "darwin":
-            os_name = "mac"
+            os_name = "osx"
         case _:
             raise RuntimeError(f"Unsupported OS: {system}")
 

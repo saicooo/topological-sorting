@@ -13,7 +13,7 @@ import urllib.request
 from dotenv import find_dotenv, dotenv_values
 config = dotenv_values(find_dotenv())
 
-JFX_VERSION = config.get("JFX_VERSION")
+JFX_VERSION = config.get("JFX_VERSION", "21.0.7")
 LIB_DIR = Path(config.get("LIB_DIR"))
 TMP_DIR = Path(config.get("TMP_DIR"))
 
