@@ -75,6 +75,15 @@
                      </font>
                   </Button>
                   
+                  <!-- Кнопка для сохранения пути -->
+                  <Button fx:id="SavePathButton" mnemonicParsing="false" 
+                          onAction="#onSavePathClick" prefHeight="50.0" prefWidth="150.0" 
+                          text="Save Path">
+                     <font>
+                        <Font name="Calibri Bold" size="14.0" />
+                     </font>
+                  </Button>
+                  
                   <Button fx:id="RunImmediately" mnemonicParsing="false" 
                           onAction="#onRunImmediatelyClick" prefHeight="50.0" prefWidth="150.0" 
                           text="Run All">
