@@ -1,6 +1,5 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-// import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -8,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-// import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -16,6 +14,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +32,7 @@ public class Controller {
     @FXML private Button ForwardButton;
     @FXML private Button OnLoadFromFile;
     @FXML private Button RunImmediately;
+    @FXML private Button SavePathButton;
     
     @FXML private Label pathLabel;
 
@@ -65,6 +65,45 @@ public class Controller {
                 updatePathLabel();
             } catch (Exception e) {
                 showAlert(AlertType.ERROR, "Error", "Load failed", e.getMessage());
+            }
+        }
+    }
+
+    // Метод для сохранения пути в файл
+    @FXML
+    void onSavePathClick(ActionEvent event) {
+        if (sorter == null || sorter.getSortedSoFar().isEmpty()) {
+            showAlert(AlertType.WARNING, "Warning", "No path", "Nothing to save - sort the graph first");
+            return;
+        }
+        
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Path to File");
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Text Files", "*.txt")
+        );
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            try {
+                // Формируем содержимое файла в формате "1 -> 2 -> 3"
+                StringBuilder content = new StringBuilder();
+                for (int i = 0; i < sorter.getSortedSoFar().size(); i++) {
+                    Vertex v = sorter.getSortedSoFar().get(i);
+                    content.append(v.getName());
+                    if (i < sorter.getSortedSoFar().size() - 1) {
+                        content.append(" -> ");
+                    }
+                }
+                
+                // Записываем в файл
+                Path path = file.toPath();
+                Files.write(path, content.toString().getBytes());
+                
+                showAlert(AlertType.INFORMATION, "Success", "Path saved", 
+                         "Path was successfully saved to: " + path);
+            } catch (Exception e) {
+                showAlert(AlertType.ERROR, "Error", "Save failed", e.getMessage());
             }
         }
     }
@@ -245,9 +284,9 @@ public class Controller {
         
         StringBuilder path = new StringBuilder("Topological Path: ");
         for (Vertex v : sorter.getSortedSoFar()) {
-            path.append(v.getName()).append(" → ");
+            path.append(v.getName()).append(" -> ");
         }
-        path.setLength(path.length() - 3); // Удаляем последнюю стрелку
+        path.setLength(path.length() - 4); // Удаляем последний " -> " (4 символа)
         pathLabel.setText(path.toString());
     }
 
