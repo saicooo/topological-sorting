@@ -82,7 +82,9 @@ chmod 755 start.sh     # при необходимости и/или возни�
 
 ## Связь с разработчиками
 - stepanviolet@gmail.com (рекомендовано)
-- [stepanviolet](https://vk.com/stepanviolet)
+- maks.berezovskiy.2005@gmail.com
 - magicjabka1337@gmail.com (крутой типо4ек)
+- [stepanviolet](https://vk.com/stepanviolet)
+- [bermaxim](https://t.me/max_berezovskiy)
 - [magicjabka](https://vk.com/emokaaa)
 
