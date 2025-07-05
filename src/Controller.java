@@ -43,11 +43,6 @@ public class Controller {
     private double offsetX = 0;
     private double offsetY = 0;
 
-    // @FXML
-    // public void initialize() {
-    //     
-    // }
-
     @FXML
     void onLoadFromFileClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -92,15 +87,16 @@ public class Controller {
         double graphWidth = maxX - minX;
         double graphHeight = maxY - minY;
         
-        // Используем реальные размеры области для рисования
+        // Получаем реальные размеры с учетом ScrollPane
         double canvasWidth = graphCanvas.getWidth();
         double canvasHeight = graphCanvas.getHeight();
         
-        // Рассчитываем масштаб для вписывания в область просмотра
+        // Добавляем 20% отступ для раннего появления скролла
+        double paddingFactor = 0.2;
         double scaleX = (canvasWidth > 0 && graphWidth > 0) 
-                ? (canvasWidth - 100) / graphWidth : 1;
+                ? (canvasWidth * (1 - paddingFactor)) / graphWidth : 1;
         double scaleY = (canvasHeight > 0 && graphHeight > 0) 
-                ? (canvasHeight - 100) / graphHeight : 1;
+                ? (canvasHeight * (1 - paddingFactor)) / graphHeight : 1;
         
         scale = Math.min(scaleX, scaleY) * 0.95; // Добавляем небольшой отступ
         

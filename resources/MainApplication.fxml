@@ -21,13 +21,16 @@
       <VBox fx:id="mainContainer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <!-- Область для рисования графа и контейнера пути-->
-            <SplitPane fx:id="mainSplitPane" orientation="VERTICAL" dividerPositions="0.9" 
+            <SplitPane fx:id="mainSplitPane" orientation="VERTICAL" dividerPositions="0.95" 
                        VBox.vgrow="ALWAYS">
                <items>
                   <!-- Верхняя часть - граф -->
-                  <ScrollPane fitToWidth="true" fitToHeight="true" 
-                              hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
-                     <Pane fx:id="graphCanvas" minHeight="300" style="-fx-background-color: white;"/>
+                  <ScrollPane fitToWidth="true" fitToHeight="true"
+                              hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                              minViewportWidth="600" minViewportHeight="400"
+                              style="-fx-background-color: #f0f0f0;">
+                     <Pane fx:id="graphCanvas" minWidth="800" minHeight="600"
+                           style="-fx-background-color: white;" />
                   </ScrollPane>
                   
                   <!-- Нижняя часть - контейнер пути -->
