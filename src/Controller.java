@@ -1,13 +1,13 @@
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
+// import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
+// import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -30,6 +30,8 @@ public class Controller {
     @FXML private Button ForwardButton;
     @FXML private Button OnLoadFromFile;
     @FXML private Button RunImmediately;
+    
+    @FXML private Label pathLabel;
 
     private Graph graph;
     private TopologicalSorter sorter;
@@ -37,17 +39,16 @@ public class Controller {
     private double scale = 1.0;
     private double offsetX = 0;
     private double offsetY = 0;
-    private Label pathLabel;
 
-    @FXML
-    public void initialize() {
-        // Инициализация контейнера для пути
-        pathLabel = new Label();
-        pathLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-        pathLabel.setPadding(new Insets(10));
-        pathContainer.getChildren().add(pathLabel);
-        HBox.setHgrow(pathLabel, Priority.ALWAYS);
-    }
+    // @FXML
+    // public void initialize() {
+    //     // Инициализация контейнера для пути
+    //     // pathLabel = new Label();
+    //     // pathLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+    //     // pathLabel.setPadding(new Insets(10));
+    //     // pathContainer.getChildren().add(pathLabel);
+    //     // HBox.setHgrow(pathLabel, Priority.ALWAYS);
+    // }
 
     @FXML
     void onLoadFromFileClick(ActionEvent event) {
