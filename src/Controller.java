@@ -5,6 +5,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 // import javafx.scene.layout.Priority;
@@ -21,8 +22,10 @@ import java.util.Map;
 
 public class Controller {
 
-    @FXML private Pane graphCanvas;
     @FXML private VBox mainContainer;
+    @FXML private SplitPane mainSplitPane;
+    @FXML private HBox graphContainer;
+    @FXML private Pane graphCanvas;
     @FXML private HBox pathContainer;
     
     // Кнопки
@@ -42,12 +45,7 @@ public class Controller {
 
     // @FXML
     // public void initialize() {
-    //     // Инициализация контейнера для пути
-    //     // pathLabel = new Label();
-    //     // pathLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
-    //     // pathLabel.setPadding(new Insets(10));
-    //     // pathContainer.getChildren().add(pathLabel);
-    //     // HBox.setHgrow(pathLabel, Priority.ALWAYS);
+    //     
     // }
 
     @FXML
@@ -147,12 +145,12 @@ public class Controller {
                 double endX = x2 - 20 * dx;
                 double endY = y2 - 20 * dy;
                 
-                // Отрисовываем линию
+                // Отрисовка линию
                 Line edgeLine = new Line(x1, y1, endX, endY);
                 edgeLine.setStrokeWidth(2);
                 graphCanvas.getChildren().add(edgeLine);
                 
-                // Отрисовываем стрелку
+                // Отрисовка стрелку
                 drawArrow(endX, endY, dx, dy);
             }
         }

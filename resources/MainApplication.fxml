@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.geometry.Insets?>
 
@@ -19,19 +20,29 @@
    <children>
       <VBox fx:id="mainContainer" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <!-- Область для рисования графа -->
-            <Pane fx:id="graphCanvas" prefHeight="600.0" prefWidth="1200.0" 
-                  VBox.vgrow="ALWAYS" />
-            
-            <!-- Контейнер для отображения пути -->
-            <HBox fx:id="pathContainer" prefHeight="50.0" prefWidth="1200.0" 
-                  style="-fx-background-color: #f0f0f0;">
-               <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" HBox.hgrow="ALWAYS">
-                  <Label fx:id="pathLabel" 
-                        wrapText="true" 
-                        style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px;"/>
-               </ScrollPane>
-            </HBox>
+            <!-- Область для рисования графа и контейнера пути-->
+            <SplitPane fx:id="mainSplitPane" orientation="VERTICAL" dividerPositions="0.9" 
+                       VBox.vgrow="ALWAYS">
+               <items>
+                  <!-- Верхняя часть - граф -->
+                  <ScrollPane fitToWidth="true" fitToHeight="true" 
+                              hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED">
+                     <Pane fx:id="graphCanvas" minHeight="300" style="-fx-background-color: white;"/>
+                  </ScrollPane>
+                  
+                  <!-- Нижняя часть - контейнер пути -->
+                  <VBox minHeight="50" >
+                        <HBox fx:id="pathContainer" style="-fx-background-color: #f0f0f0;" 
+                              VBox.vgrow="ALWAYS">
+                           <ScrollPane fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" 
+                                       HBox.hgrow="ALWAYS">
+                              <Label fx:id="pathLabel" wrapText="true" 
+                                       style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-padding: 10px;"/>
+                           </ScrollPane>
+                        </HBox>
+                  </VBox>
+               </items>
+            </SplitPane>
             
             <!-- Панель кнопок -->
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="1200.0" 
