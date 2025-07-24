@@ -81,7 +81,8 @@ chmod 755 start.sh     # при необходимости и/или возни�
 - stepanviolet@gmail.com (рекомендовано)
 - maks.berezovskiy.2005@gmail.com
 - magicjabka1337@gmail.com (крутой типо4ек)
+- ma.hanafy3424@gmail.com
 - [stepanviolet](https://vk.com/stepanviolet)
 - [bermaxim](https://t.me/max_berezovskiy)
 - [magicjabka](https://vk.com/emokaaa)
-
+- [ma.hanafy](https://vk.com/ma.hanafy)
